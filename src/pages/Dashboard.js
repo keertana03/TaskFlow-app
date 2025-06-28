@@ -8,42 +8,43 @@ export default function Dashboard() {
   const [newTask, setNewTask] = useState('');
   const [newNote, setNewNote] = useState('');
   const [activeTab, setActiveTab] = useState('tasks');
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
 
   const navigate = useNavigate();
 
-  // 🧠 Load user and their data
   useEffect(() => {
-  const storedUser = JSON.parse(localStorage.getItem('users'))?.find(
-    user => user.email === localStorage.getItem('currentUser')
-  );
-  const email = storedUser?.email;
-
-  if (storedUser) {
-    setUser(storedUser);
-
-    // Load tasks/notes for this user only
-    const savedTasks = JSON.parse(localStorage.getItem(`tasks-${email}`)) || [];
-    const savedNotes = JSON.parse(localStorage.getItem(`notes-${email}`)) || [];
-    setTasks(savedTasks);
-    setNotes(savedNotes);
-  }
-}, []);
-
-
+    document.documentElement.classList.toggle('dark', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
-  if (user.email) {
-    localStorage.setItem(`tasks-${user.email}`, JSON.stringify(tasks));
-  }
-}, [tasks, user.email]);
+    const storedUser = JSON.parse(localStorage.getItem('users'))?.find(
+      user => user.email === localStorage.getItem('currentUser')
+    );
+    const email = storedUser?.email;
 
-useEffect(() => {
-  if (user.email) {
-    localStorage.setItem(`notes-${user.email}`, JSON.stringify(notes));
-  }
-}, [notes, user.email]);
+    if (storedUser) {
+      setUser(storedUser);
+      const savedTasks = JSON.parse(localStorage.getItem(`tasks-${email}`)) || [];
+      const savedNotes = JSON.parse(localStorage.getItem(`notes-${email}`)) || [];
+      setTasks(savedTasks);
+      setNotes(savedNotes);
+    }
+  }, []);
 
+  useEffect(() => {
+    if (user.email) {
+      localStorage.setItem(`tasks-${user.email}`, JSON.stringify(tasks));
+    }
+  }, [tasks, user.email]);
 
+  useEffect(() => {
+    if (user.email) {
+      localStorage.setItem(`notes-${user.email}`, JSON.stringify(notes));
+    }
+  }, [notes, user.email]);
 
   const addTask = () => {
     if (newTask.trim()) {
@@ -53,11 +54,10 @@ useEffect(() => {
   };
 
   const toggleTask = (id) => {
-  setTasks(tasks.map(task => 
-    task.id === id ? { ...task, done: !task.done } : task
-  ));
-};
-
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, done: !task.done } : task
+    ));
+  };
 
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
@@ -81,14 +81,23 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-10">
-        <h1 className="text-4xl font-bold text-purple-700 mb-2">
-          Welcome, {user.name || 'User'}! 🌟
-        </h1>
-        <p className="text-lg text-gray-700 mb-6">📧 {user.email}</p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-8 transition-all">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-10">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-4xl font-bold text-purple-700 dark:text-purple-300 mb-1">
+              Welcome, {user.name || 'User'}! 🌟
+            </h1>
+            <p className="text-lg text-gray-700 dark:text-gray-300">📧 {user.email}</p>
+          </div>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-xl shadow hover:shadow-lg transition"
+          >
+            {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+        </div>
 
-        {/* Tabs */}
         <div className="flex gap-4 mb-6">
           {['tasks', 'notes', 'upload'].map((tab) => (
             <button
@@ -97,7 +106,7 @@ useEffect(() => {
               className={`px-4 py-2 rounded-xl font-semibold capitalize transition ${
                 activeTab === tab
                   ? 'bg-purple-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-purple-200'
+                  : 'bg-gray-200 text-gray-700 dark:bg-gray-600 dark:text-gray-200 hover:bg-purple-200'
               }`}
             >
               {tab}
@@ -105,18 +114,17 @@ useEffect(() => {
           ))}
         </div>
 
-        {/* Tab content */}
-        <div className="bg-gray-50 p-6 rounded-xl shadow-inner">
+        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
           {activeTab === 'tasks' && (
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-800">Your Tasks 📋</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Tasks 📋</h2>
               <div className="flex mb-4 gap-2">
                 <input
                   type="text"
                   value={newTask}
                   onChange={(e) => setNewTask(e.target.value)}
                   placeholder="Add a new task"
-                  className="w-full p-2 border border-gray-300 rounded-xl"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 />
                 <button
                   onClick={addTask}
@@ -130,7 +138,9 @@ useEffect(() => {
                   <li
                     key={task.id}
                     className={`flex items-center justify-between p-4 rounded-xl shadow-sm ${
-                      task.done ? 'bg-green-100' : 'bg-gray-100'
+                      task.done
+                        ? 'bg-green-100 dark:bg-green-700'
+                        : 'bg-gray-100 dark:bg-gray-800'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -142,7 +152,9 @@ useEffect(() => {
                       />
                       <span
                         className={`text-lg ${
-                          task.done ? 'line-through text-gray-500' : 'text-gray-800'
+                          task.done
+                            ? 'line-through text-gray-500 dark:text-gray-400'
+                            : 'text-gray-800 dark:text-white'
                         }`}
                       >
                         {task.text}
@@ -162,14 +174,14 @@ useEffect(() => {
 
           {activeTab === 'notes' && (
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-800">Your Notes 📝</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Notes 📝</h2>
               <div className="flex mb-4 gap-2">
                 <input
                   type="text"
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
                   placeholder="Add a new note"
-                  className="w-full p-2 border border-gray-300 rounded-xl"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 />
                 <button
                   onClick={addNote}
@@ -182,9 +194,9 @@ useEffect(() => {
                 {notes.map((note) => (
                   <li
                     key={note.id}
-                    className="flex justify-between items-center p-4 bg-yellow-100 rounded-xl shadow-sm"
+                    className="flex justify-between items-center p-4 bg-yellow-100 dark:bg-yellow-600 rounded-xl shadow-sm"
                   >
-                    <span className="text-gray-800">{note.content}</span>
+                    <span className="text-gray-800 dark:text-gray-100">{note.content}</span>
                     <button
                       onClick={() => deleteNote(note.id)}
                       className="text-red-500 hover:text-red-700 font-bold"
@@ -199,13 +211,12 @@ useEffect(() => {
 
           {activeTab === 'upload' && (
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-800">File Upload 📁</h2>
-              <p className="text-gray-500">Coming up next...</p>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">File Upload 📁</h2>
+              <p className="text-gray-500 dark:text-gray-300">Coming up next...</p>
             </div>
           )}
         </div>
 
-        {/* Logout */}
         <button
           onClick={handleLogout}
           className="mt-6 bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-xl shadow-md"
