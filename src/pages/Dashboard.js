@@ -115,108 +115,110 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Animated Tab content */}
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner transition-all duration-500">
-          {activeTab === 'tasks' && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Tasks 📋</h2>
-              <div className="flex mb-4 gap-2">
-                <input
-                  type="text"
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                  placeholder="Add a new task"
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                />
-                <button
-                  onClick={addTask}
-                  className="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600"
-                >
-                  Add
-                </button>
-              </div>
-              <ul className="space-y-3">
-                {tasks.map((task) => (
-                  <li
-                    key={task.id}
-                    className={`flex items-center justify-between p-4 rounded-xl shadow-sm ${
-                      task.done
-                        ? 'bg-green-100 dark:bg-green-700'
-                        : 'bg-gray-100 dark:bg-gray-800'
-                    }`}
+        {/* Tab content with horizontal scroll */}
+        <div className="overflow-x-auto no-scrollbar transition-all duration-500">
+          <div className="min-w-[300px]">
+            {activeTab === 'tasks' && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Tasks 📋</h2>
+                <div className="flex mb-4 gap-2">
+                  <input
+                    type="text"
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                    placeholder="Add a new task"
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  />
+                  <button
+                    onClick={addTask}
+                    className="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600"
                   >
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        checked={task.done}
-                        onChange={() => toggleTask(task.id)}
-                        className="w-5 h-5 text-purple-600"
-                      />
-                      <span
-                        className={`text-lg ${
-                          task.done
-                            ? 'line-through text-gray-500 dark:text-gray-400'
-                            : 'text-gray-800 dark:text-white'
-                        }`}
+                    Add
+                  </button>
+                </div>
+                <ul className="space-y-3">
+                  {tasks.map((task) => (
+                    <li
+                      key={task.id}
+                      className={`flex items-center justify-between p-4 rounded-xl shadow-sm ${
+                        task.done
+                          ? 'bg-green-100 dark:bg-green-700'
+                          : 'bg-gray-100 dark:bg-gray-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={task.done}
+                          onChange={() => toggleTask(task.id)}
+                          className="w-5 h-5 text-purple-600"
+                        />
+                        <span
+                          className={`text-lg ${
+                            task.done
+                              ? 'line-through text-gray-500 dark:text-gray-400'
+                              : 'text-gray-800 dark:text-white'
+                          }`}
+                        >
+                          {task.text}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => deleteTask(task.id)}
+                        className="text-red-500 hover:text-red-700 font-bold"
                       >
-                        {task.text}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => deleteTask(task.id)}
-                      className="text-red-500 hover:text-red-700 font-bold"
-                    >
-                      ✕
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {activeTab === 'notes' && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Notes 📝</h2>
-              <div className="flex mb-4 gap-2">
-                <input
-                  type="text"
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Add a new note"
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                />
-                <button
-                  onClick={addNote}
-                  className="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600"
-                >
-                  Add
-                </button>
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-3">
-                {notes.map((note) => (
-                  <li
-                    key={note.id}
-                    className="flex justify-between items-center p-4 bg-yellow-100 dark:bg-yellow-600 rounded-xl shadow-sm"
-                  >
-                    <span className="text-gray-800 dark:text-gray-100">{note.content}</span>
-                    <button
-                      onClick={() => deleteNote(note.id)}
-                      className="text-red-500 hover:text-red-700 font-bold"
-                    >
-                      ✕
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            )}
 
-          {activeTab === 'upload' && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">File Upload 📁</h2>
-              <p className="text-gray-500 dark:text-gray-300">Coming soon...</p>
-            </div>
-          )}
+            {activeTab === 'notes' && (
+              <div className="min-w-full sm:min-w-[28rem]">
+                <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Notes 📝</h2>
+                <div className="flex mb-4 gap-2">
+                  <input
+                    type="text"
+                    value={newNote}
+                    onChange={(e) => setNewNote(e.target.value)}
+                    placeholder="Add a new note"
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  />
+                  <button
+                    onClick={addNote}
+                    className="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600"
+                  >
+                    Add
+                  </button>
+                </div>
+                <ul className="space-y-3">
+                  {notes.map((note) => (
+                    <li
+                      key={note.id}
+                      className="flex justify-between items-center p-4 bg-yellow-100 dark:bg-yellow-600 rounded-xl shadow-sm"
+                    >
+                      <span className="text-gray-800 dark:text-gray-100">{note.content}</span>
+                      <button
+                        onClick={() => deleteNote(note.id)}
+                        className="text-red-500 hover:text-red-700 font-bold"
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {activeTab === 'upload' && (
+              <div className="min-w-full sm:min-w-[28rem]">
+                <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">File Upload 📁</h2>
+                <p className="text-gray-500 dark:text-gray-300">Coming soon...</p>
+              </div>
+            )}
+          </div>
         </div>
 
         <button
