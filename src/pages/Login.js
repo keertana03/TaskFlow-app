@@ -10,6 +10,7 @@ export default function Login() {
   const handleLogin = (e) => {
   e.preventDefault();
   const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+  console.log('Stored users:', storedUsers);
   const storedUser = storedUsers.find(user => user.email === email && user.password === password);
 
   if (storedUser) {
