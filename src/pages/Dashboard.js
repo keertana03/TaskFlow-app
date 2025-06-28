@@ -86,7 +86,7 @@ export default function Dashboard() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-purple-700 dark:text-purple-300 mb-1">
-              Welcome! 
+              Welcome!
             </h1>
             <p className="text-lg text-gray-700 mb-6">📧 {user.email}</p>
           </div>
@@ -115,10 +115,14 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Tab content with horizontal scroll */}
-        <div className="overflow-x-auto no-scrollbar transition-all duration-500">
-          <div className="min-w-[300px]">
-            {activeTab === 'tasks' && (
+        {/* Sliding Tabs */}
+        <div className="relative w-full overflow-hidden rounded-xl">
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${['tasks', 'notes', 'upload'].indexOf(activeTab) * 100}%)`, width: '300%' }}
+          >
+            {/* Tasks */}
+            <div className="w-full px-2 shrink-0">
               <div>
                 <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Tasks 📋</h2>
                 <div className="flex mb-4 gap-2">
@@ -173,10 +177,11 @@ export default function Dashboard() {
                   ))}
                 </ul>
               </div>
-            )}
+            </div>
 
-            {activeTab === 'notes' && (
-              <div className="min-w-full sm:min-w-[28rem]">
+            {/* Notes */}
+            <div className="w-full px-2 shrink-0">
+              <div>
                 <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Notes 📝</h2>
                 <div className="flex mb-4 gap-2">
                   <input
@@ -210,14 +215,15 @@ export default function Dashboard() {
                   ))}
                 </ul>
               </div>
-            )}
+            </div>
 
-            {activeTab === 'upload' && (
-              <div className="min-w-full sm:min-w-[28rem]">
+            {/* Upload */}
+            <div className="w-full px-2 shrink-0">
+              <div>
                 <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">File Upload 📁</h2>
                 <p className="text-gray-500 dark:text-gray-300">Coming soon...</p>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
