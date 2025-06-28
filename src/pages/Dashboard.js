@@ -88,7 +88,7 @@ export default function Dashboard() {
             <h1 className="text-3xl sm:text-4xl font-bold text-purple-700 dark:text-purple-300 mb-1">
               Welcome!
             </h1>
-            <p className="text-lg text-gray-700 mb-6">📧 {user.email}</p>
+            <p className="text-3xl sm:text-4xl font-bold text-purple-700 dark:text-purple-300 mb-1">📧 {user.email}</p>
           </div>
           <button
             onClick={() => setDarkMode(!darkMode)}
