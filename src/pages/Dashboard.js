@@ -8,9 +8,16 @@ export default function Dashboard() {
   const [newTask, setNewTask] = useState('');
   const [newNote, setNewNote] = useState('');
   const [activeTab, setActiveTab] = useState('tasks');
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('users'))?.find(
@@ -74,19 +81,24 @@ export default function Dashboard() {
   };
 
   return (
-    <div className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 text-gray-800'} min-h-screen p-4`}>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8 transition-all">
       <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 sm:p-10 transition duration-300">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-3xl font-bold text-purple-700 dark:text-white">Welcome! 🌟</h1>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-purple-700 dark:text-purple-300 mb-1">
+              Welcome! 🌟
+            </h1>
+          </div>
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className="px-4 py-1 rounded-xl text-sm font-semibold border border-purple-500 text-purple-600 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-700 transition"
+            className="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-xl shadow hover:shadow-lg transition"
           >
-            Toggle {darkMode ? 'Light' : 'Dark'}
+            {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
           </button>
         </div>
 
-        <div className="flex gap-3 overflow-x-auto mb-6 no-scrollbar">
+        {/* Tabs */}
+        <div className="flex gap-4 mb-6 overflow-x-auto no-scrollbar">
           {['tasks', 'notes', 'upload'].map((tab) => (
             <button
               key={tab}
@@ -94,7 +106,7 @@ export default function Dashboard() {
               className={`flex-shrink-0 px-4 py-2 rounded-xl font-semibold capitalize transition ${
                 activeTab === tab
                   ? 'bg-purple-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-purple-200 dark:hover:bg-purple-500'
+                  : 'bg-gray-200 text-gray-700 dark:bg-gray-600 dark:text-gray-200 hover:bg-purple-200 dark:hover:bg-purple-500'
               }`}
             >
               {tab}
@@ -102,7 +114,8 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner animate-fade-in">
+        {/* Animated Tab content */}
+        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner transition-all duration-500">
           {activeTab === 'tasks' && (
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-purple-800 dark:text-purple-300">Your Tasks 📋</h2>
@@ -112,7 +125,7 @@ export default function Dashboard() {
                   value={newTask}
                   onChange={(e) => setNewTask(e.target.value)}
                   placeholder="Add a new task"
-                  className="w-full p-2 border border-gray-300 rounded-xl dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 />
                 <button
                   onClick={addTask}
@@ -125,8 +138,10 @@ export default function Dashboard() {
                 {tasks.map((task) => (
                   <li
                     key={task.id}
-                    className={`flex items-center justify-between p-4 rounded-xl shadow-sm transition ${
-                      task.done ? 'bg-green-100 dark:bg-green-800' : 'bg-gray-100 dark:bg-gray-600'
+                    className={`flex items-center justify-between p-4 rounded-xl shadow-sm ${
+                      task.done
+                        ? 'bg-green-100 dark:bg-green-700'
+                        : 'bg-gray-100 dark:bg-gray-800'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -136,7 +151,13 @@ export default function Dashboard() {
                         onChange={() => toggleTask(task.id)}
                         className="w-5 h-5 text-purple-600"
                       />
-                      <span className={`text-lg ${task.done ? 'line-through text-gray-500' : 'text-gray-800 dark:text-white'}`}>
+                      <span
+                        className={`text-lg ${
+                          task.done
+                            ? 'line-through text-gray-500 dark:text-gray-400'
+                            : 'text-gray-800 dark:text-white'
+                        }`}
+                      >
                         {task.text}
                       </span>
                     </div>
@@ -161,7 +182,7 @@ export default function Dashboard() {
                   value={newNote}
                   onChange={(e) => setNewNote(e.target.value)}
                   placeholder="Add a new note"
-                  className="w-full p-2 border border-gray-300 rounded-xl dark:bg-gray-800 dark:text-white"
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 />
                 <button
                   onClick={addNote}
@@ -174,9 +195,9 @@ export default function Dashboard() {
                 {notes.map((note) => (
                   <li
                     key={note.id}
-                    className="flex justify-between items-center p-4 bg-yellow-100 dark:bg-yellow-800 rounded-xl shadow-sm"
+                    className="flex justify-between items-center p-4 bg-yellow-100 dark:bg-yellow-600 rounded-xl shadow-sm"
                   >
-                    <span className="text-gray-800 dark:text-white">{note.content}</span>
+                    <span className="text-gray-800 dark:text-gray-100">{note.content}</span>
                     <button
                       onClick={() => deleteNote(note.id)}
                       className="text-red-500 hover:text-red-700 font-bold"
