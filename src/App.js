@@ -19,23 +19,24 @@ function App() {
     return () => clearTimeout(timeout);
   }, []);
 
-  if (showSplash) return <SplashScreen />;
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SplashScreen />} /> {/* make this default */}
+        {/* Splash logic inside the route */}
+        <Route path="/" element={showSplash ? <SplashScreen /> : <Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
