@@ -16,22 +16,21 @@ export default function SplashScreen() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-200 via-pink-100 to-yellow-100 transition-opacity duration-500 ${
+      className={`min-h-screen flex flex-col items-center justify-center bg-white transition-opacity duration-500 ${
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      {/* Load the image and render the content only when it's ready */}
       <img
         src={logo}
         alt="App Logo"
         onLoad={() => setImageLoaded(true)}
-        className={`w-44 h-44 md:w-56 md:h-56 mb-8 ${!imageLoaded ? 'hidden' : ''}`}
+        className={`w-64 h-64 md:w-80 md:h-80 mb-10 ${!imageLoaded ? 'hidden' : ''}`}
       />
-      
+
       {imageLoaded && (
         <button
           onClick={handleLoginClick}
-          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white text-lg font-semibold rounded-xl shadow-md transition duration-300"
+          className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white text-xl font-semibold rounded-xl shadow-md transition duration-300"
         >
           Login
         </button>
