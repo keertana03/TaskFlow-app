@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png'; // Make sure your logo file is in this path
+import logo from '../assets/logo.png'; // make sure the path is correct
 
 export default function SplashScreen() {
   const navigate = useNavigate();
@@ -10,19 +10,19 @@ export default function SplashScreen() {
     setFadeOut(true);
     setTimeout(() => {
       navigate('/login');
-    }, 600); // Matches animation duration
+    }, 500); // Fade duration
   };
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-200 via-pink-100 to-yellow-100 transition-opacity duration-700 ${
+      className={`min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-200 via-pink-100 to-yellow-100 transition-opacity duration-500 ${
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
       <img
         src={logo}
         alt="App Logo"
-        className="w-44 h-44 md:w-52 md:h-52 mb-8 animate-bounce"
+        className="w-44 h-44 md:w-56 md:h-56 mb-8"
       />
       <button
         onClick={handleLoginClick}
