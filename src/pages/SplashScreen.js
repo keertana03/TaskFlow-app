@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png'; // make sure the path is correct
+import logo from '../assets/logo.png';
 
 export default function SplashScreen() {
   const navigate = useNavigate();
   const [fadeOut, setFadeOut] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleLoginClick = () => {
     setFadeOut(true);
     setTimeout(() => {
       navigate('/login');
-    }, 500); // Fade duration
+    }, 500);
   };
 
   return (
@@ -19,17 +20,22 @@ export default function SplashScreen() {
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
+      {/* Load the image and render the content only when it's ready */}
       <img
         src={logo}
         alt="App Logo"
-        className="w-44 h-44 md:w-56 md:h-56 mb-8"
+        onLoad={() => setImageLoaded(true)}
+        className={`w-44 h-44 md:w-56 md:h-56 mb-8 ${!imageLoaded ? 'hidden' : ''}`}
       />
-      <button
-        onClick={handleLoginClick}
-        className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white text-lg font-semibold rounded-xl shadow-md transition duration-300"
-      >
-        Login
-      </button>
+      
+      {imageLoaded && (
+        <button
+          onClick={handleLoginClick}
+          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white text-lg font-semibold rounded-xl shadow-md transition duration-300"
+        >
+          Login
+        </button>
+      )}
     </div>
   );
 }
