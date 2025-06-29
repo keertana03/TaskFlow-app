@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from 'src/assets/logo.png'; // make sure your logo file is here
+import logo from '../assets/logo.png'; // make sure your logo file is here
 
 export default function SplashScreen() {
   const navigate = useNavigate();
